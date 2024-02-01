@@ -1,0 +1,25 @@
+openapi: "3.0.0"
+info: 
+  title: Notes Backend API v1
+  description: "CRUD Handling"
+  version: "1.0.0"
+
+servers:
+  - url: "/api/v1"
+
+paths:
+  /notes/:
+    get:
+      operationId: "api.v1.endpoints.notes.NotesView.get"
+      description: "Get all notes filtered"
+
+      tags:
+        - "Items"
+        
+      responses:
+        "200":
+          description: Return list of notes
+          
+        "400":
+          description: "Bad Request, Invalid input data"
+    
