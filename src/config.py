@@ -11,6 +11,7 @@ class Config:
     LISTEN_PORT: int
     DEBUG: bool
     DATABASE: dict
+    SECRET_KEY: str
 
 
     @classmethod
@@ -44,6 +45,7 @@ class Config:
         return {
             "LISTEN_PORT" : 9000,
             "DEBUG" : True,
+            "SECRET_KEY" : "TEST_SECRET_KEY_NOTES_ASPP",
             "DATABASE" : {
                 "username": env("DB_USER"),
                 "password": env("DB_PASSWORD"),

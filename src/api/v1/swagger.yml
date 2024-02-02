@@ -8,13 +8,104 @@ servers:
   - url: "/api/v1"
 
 paths:
+  /users/:
+    get:
+      operationId: "api.v1.endpoints.users.UsersView.get"
+      description: "Get all users filtered"
+
+      tags:
+        - "Users"
+      
+      parameters:
+        - in: header 
+          name: token
+          required: true 
+          schema: 
+            type: string
+        
+      responses:
+        "200":
+          description: Return list of users
+          
+        "400":
+          description: "Bad Request, Invalid input data"
+    post:
+      operationId: api.v1.endpoints.users.UsersView.post
+      description: "Create a user in database"
+
+      tags:
+        - "Users"
+      
+      parameters:
+        - in: header 
+          name: token
+          required: true 
+          schema: 
+            type: string
+      
+      requestBody:
+        description: "Details of user to be created"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  nullable: false
+                email:
+                  type: string
+                  nullable: false
+    
+      responses:
+            "201":
+              description: Record Created
+            "400": 
+              description: "Bad Request: Invalid Input Data"
+  
+  /users/{user_id}/:
+      get: # Get user by ID
+        operationId: api.v1.endpoints.users.UsersDetailedView.get
+        description: "Get user by ID"
+
+        tags: 
+          - Users
+
+        parameters:
+          - in: header 
+            name: token
+            required: true 
+            schema: 
+              type: string
+
+          - in: path  
+            name: user_id
+            description: "ID of the user being searched"
+            required: true
+            schema: 
+              type: integer 
+      
+        responses:
+          "200": 
+            description: "Returns the required user"
+          "404": 
+            description: "Note not found"
+ 
   /notes/:
     get:
       operationId: "api.v1.endpoints.notes.NotesView.get"
       description: "Get all notes filtered"
 
       tags:
-        - "Items"
+        - "Notes"
+      
+      parameters:
+        - in: header 
+          name: token
+          required: true 
+          schema: 
+            type: string
         
       responses:
         "200":
@@ -23,3 +114,159 @@ paths:
         "400":
           description: "Bad Request, Invalid input data"
     
+    post:
+      operationId: api.v1.endpoints.notes.NotesView.post
+      description: "Create a note in database"
+
+      tags:
+        - "Notes"
+      
+      parameters:
+        - in: header 
+          name: token
+          required: true 
+          schema: 
+            type: string
+      
+      requestBody:
+        description: "Details of note to be created"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: 
+                  type: string
+                  nullable: false
+                description:
+                  type: string
+                  nullable: false
+    
+      responses:
+            "201":
+              description: Record Created
+            "400": 
+              description: "Bad Request: Invalid Input Data"
+
+  /notes/{note_id}/:
+      get: # Get note by ID
+        operationId: api.v1.endpoints.notes.NotesDetailedView.get
+        description: "Get note by ID"
+
+        tags: 
+          - Notes
+      
+
+        parameters:
+          - in: header 
+            name: token
+            required: true 
+            schema: 
+              type: string
+          - in: path  
+            name: note_id
+            description: "ID of the note being searched"
+            required: true
+            schema: 
+              type: integer 
+      
+        responses:
+          "200": 
+            description: "Returns the required note"
+          "404": 
+            description: "Note not found"
+
+      put: # Update a Note 
+        operationId: api.v1.endpoints.notes.NotesDetailedView.put
+        description: "Update note details"
+
+        tags: 
+          - Notes
+
+        parameters: 
+          - in: header 
+            name: token
+            required: true 
+            schema: 
+              type: string
+          - in: path 
+            name: note_id 
+            required: true 
+            description: "ID of the note to be edited"
+            schema: 
+              type: integer 
+
+        requestBody:
+          description: "Details of the note to change"
+          required: true
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  description: 
+                    type: string 
+      
+        responses:
+          "200": 
+            description: "note updated successfully"
+          "400": 
+            description: "Bad Request: Invalid Input Data"
+          "404": 
+            description: "note not found"
+
+      delete: # Delete a note
+        operationId: api.v1.endpoints.notes.NotesDetailedView.delete
+        description: "Delete a note"
+
+        tags:
+          - Notes
+
+        parameters: 
+          - in: header 
+            name: token
+            required: true 
+            schema: 
+              type: string
+          - in: path 
+            name: note_id 
+            required: true 
+            description: ID of the note to be deleted
+            schema: 
+              type: integer 
+
+        responses:
+          "200": 
+            description: "Note successfully deleted"
+          "404": 
+            description: "Note not found"
+
+  /notes_history/:
+    get:
+      operationId: "api.v1.endpoints.notes_history.NotesHistoryView.get"
+      description: "Get all Notes History"
+
+      tags:
+        - "NotesHistory"
+      
+      parameters:
+        - in: header 
+          name: token
+          required: true 
+          schema: 
+            type: string
+        - in: query
+          name: note_id
+          description: Note ID
+          schema: 
+            type: string 
+        
+      responses:
+        "200":
+          description: Return list of notes
+          
+        "400":
+          description: "Bad Request, Invalid input data"    

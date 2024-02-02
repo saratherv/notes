@@ -5,13 +5,18 @@ from config import Config
 config_obj = Config.load()
 from core.database import database
 import pathlib
+from flask_cors import CORS
+
 
 
 basedir = pathlib.Path(__file__).parent.resolve()
 connexion_app = connexion.App(__name__, specification_dir=basedir)
+connexion_app.app.config.from_object(config_obj)
 connexion_app.add_api(basedir / "api/v1/swagger.yml")
+connexion_app.add_api(basedir / "core/authentication/swagger.yml")
 app = connexion_app.app
 
+CORS(app, origins=["http://localhost:3000"])
 
 
 db=database.initialize(

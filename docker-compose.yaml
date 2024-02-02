@@ -1,0 +1,71 @@
+version: "3.8"
+services:
+  database: 
+    image: mysql 
+
+    container_name: local-notes-mysql 
+
+    # Uncomment this to be able to access the DB directly.
+    # Else not required as comms happen within docker network 
+    # ports: 
+    #   - "3306:3306"
+
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: "notes-test-user"
+      MYSQL_DATABASE: "notes_db"
+
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-p$$MYSQL_ROOT_PASSWORD", "--protocol", "tcp"]
+      interval: 1s
+      retries: 60
+
+    networks:
+      - local-notes-db
+
+  notes-backend:
+    image: notes-backend 
+    container_name: notes-backend
+    platform: linux/amd64
+
+    ports:
+      - "9000:9000"
+
+    build: 
+      context: "." 
+      dockerfile: Dockerfile
+      
+    environment:
+      FLASK_APP: app.py 
+      FLASK_DEBUG: "True"
+      CLOUD_PROVIDER: LOCAL
+      
+      DB_USER: root
+      DB_PASSWORD: notes-test-user
+      DB_ENGINE: LOCAL
+      DB_HOST: local-notes-mysql 
+      DB_PORT: 3306
+      DB_NAME: notes_db
+    
+    volumes:
+      - ./src:/src 
+    
+    networks:
+      - local-notes-db
+
+    stdin_open: true 
+    tty: true
+
+    command: tail -f /dev/null
+
+    depends_on:
+      database:
+        condition: service_healthy
+
+networks:
+  local-notes-db: 
+    ipam:
+      driver: default 
+      config: 
+        - subnet: 192.168.70.0/24

@@ -1,0 +1,86 @@
+openapi: "3.0.0"
+info: 
+  title: Notes Backend Core API
+  description: "Authentication Handling"
+  version: "1.0.0"
+
+servers:
+  - url: "/core/authentication"
+
+paths: 
+            
+    /heartbeat/:
+      get:
+        operationId: core.authentication.auth.HeartbeatView.get
+        description: Heartbeat API  
+
+        tags: 
+          - Heartbeat
+
+        responses: 
+          "200":
+            description: OK
+    
+    /login/:
+    
+      post:
+        operationId: core.authentication.auth.LoginView.post
+        description: "Login a user"
+
+        tags:
+          - "Login"
+        
+        requestBody:
+          description: "Details login user"
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email: 
+                    type: string
+                    nullable: false
+                  password:
+                    type: string
+                    nullable: false
+
+        responses:
+            "200":
+              description: User Logged in
+            "400": 
+              description: "Bad Request: Invalid Input Data"
+
+    /register/:
+    
+      post:
+        operationId: core.authentication.auth.RegisterView.post
+        description: "Register a user"
+
+        tags:
+          - "Register"
+        
+        requestBody:
+
+          description: "Details Register user"
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    nullable: false
+                  email: 
+                    type: string
+                    nullable: false
+                  password:
+                    type: string
+                    nullable: false
+
+        responses:
+            "200":
+              description: User signed up
+            "400": 
+              description: "Bad Request: Invalid Input Data"
